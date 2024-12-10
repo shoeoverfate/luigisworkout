@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Plan</title>
+    <link href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .markdown-body {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .table-of-contents {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f1f1f1;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .table-of-contents h2 {
+            margin: 0 0 10px;
+        }
+        .table-of-contents ul {
+            list-style: none;
+            padding: 0;
+        }
+        .table-of-contents ul li {
+            margin: 5px 0;
+        }
+        .table-of-contents ul li a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .table-of-contents ul li a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="table-of-contents">
+            <h2>Table of Contents</h2>
+            <ul id="toc"></ul>
+        </div>
+        <div id="markdown" class="markdown-body"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Fetch the Markdown file
+        fetch('workout.md')
+            .then(response => response.text())
+            .then(text => {
+                const markdownContainer = document.getElementById('markdown');
+                const tocContainer = document.getElementById('toc');
+
+                // Render the Markdown content
+                markdownContainer.innerHTML = marked.parse(text);
+
+                // Generate the Table of Contents
+                const headers = markdownContainer.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                headers.forEach(header => {
+                    const tocItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    const id = header.textContent.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+
+                    // Add ID to header for linking
+                    header.id = id;
+
+                    link.href = `#${id}`;
+                    link.textContent = header.textContent;
+                    tocItem.appendChild(link);
+                    tocContainer.appendChild(tocItem);
+                });
+            })
+            .catch(error => console.error('Error loading Markdown file:', error));
+    </script>
+</body>
+</html>
